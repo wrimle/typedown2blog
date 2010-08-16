@@ -1,6 +1,41 @@
 = typedown2blog
 
-Description goes here.
+An email gateway for forwarding typedown formatted mail to blogs, via 
+Mail2Blog interfaces. Designed to read mails from a MailDir directory.
+
+== FEATURES/PROBLEMS:
+
+IMPORTANT: The server daemon/batcher "typedown2blog_batcher" will delete 
+emails once processed. If you don't want this behaviour you can easily create
+your own version of the script. You have to move the mail out of the
+watched directory though, or the mail will be reprocessed every 3 seconds.
+
+== USAGE
+
+To use the bin/blog or bin/typedown2blog_batcher create blog_config.rb
+in your ruby path, with content similar to:
+
+
+    Typedown2Blog::Spec::setup do
+      blog do
+        email 'blog@example.com'
+      end
+
+      mail_defaults do 
+        delivery_method :smtp, {
+          :address              => 'your_mail_server',
+          :port                 => 25,
+          :domain               => 'example.com',
+          :user_name            => 'you@example.com',
+          :password             => 'your_password',
+          :authentication       => :plain,
+        }
+      end
+
+      # Only used by bin/typedown2blog_batcher
+      glob "your_home/Maildir/new/*"
+    end
+
 
 == Note on Patches/Pull Requests
  

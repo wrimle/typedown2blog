@@ -3,4 +3,4 @@
 require 'rubygems'
 require 'daemons'
 
-Daemons.run('typedown_batcher.rb')
+Daemons.run('typedown2blog_batcher.rb')

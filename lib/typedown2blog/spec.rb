@@ -2,17 +2,23 @@
 
 
 module Typedown2Blog
-  begin
-    glob = ARGV[0] || ENV['TYPEDOWN_MAIL_GLOB']
-  end
-
   class Spec
+    begin
+      @glob = ARGV[0] || ENV['TYPEDOWN_MAIL_GLOB']
+    end
+
+
     def self.setup &block
       instance_eval &block
     end
 
 
-    def self.mail_defaults &blog
+    def self.blog &block
+      Blog.setup &block
+    end
+
+
+    def self.mail_defaults &block
       Mail.defaults &block
     end
 

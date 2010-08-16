@@ -5,12 +5,14 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "typedown2blog"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = %Q{Email gateway for reformatting typedown documents before forwarding to blog}
+    gem.description = %Q{The script will forward to the blog via a Mail2Blog interface.}
     gem.email = "rune@epubify.com"
     gem.homepage = "http://github.com/wrimle/typedown2blog"
     gem.authors = ["Rune Myrland"]
     gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
+    gem.add_dependency('attachments','>= 0.0.6')
+    gem.add_dependency('typedown','>= 0.0.3')
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new

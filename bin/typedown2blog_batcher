@@ -11,12 +11,15 @@ include Typedown2Blog
 
 begin
   require 'blog_config'
-rescue
+rescue MissingSourceFile => err
   puts "Put your settings in blog_config.rb"
+  exit
 end
 
+puts Typedown2Blog::Blog.email
+puts Typedown2Blog::Spec.glob
 
-unless Typedown2Blog::Blog.email || Typedown2Blog::Spec.glob
+unless Typedown2Blog::Blog.email && Typedown2Blog::Spec.glob
   puts "#{__FILE__} blog_email incoming_mails_glob"
   puts "Or specify in blog_config.rb"
   exit
