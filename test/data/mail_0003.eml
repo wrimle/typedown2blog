@@ -1,0 +1,47 @@
+Return-Path: <rune@epubify.com>
+X-Original-To: posterous@boox.epubify.com
+Delivered-To: posterous@boox.epubify.com
+Received: from mail-yw0-f51.google.com (mail-yw0-f51.google.com [209.85.213.51])
+	by boox (Postfix) with ESMTP id 05EE1A8C0D
+	for <posterous@boox.epubify.com>; Mon, 16 Aug 2010 13:35:01 +0000 (UTC)
+Received: by ywj3 with SMTP id 3so2059161ywj.38
+        for <posterous@boox.epubify.com>; Mon, 16 Aug 2010 06:34:40 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 10.150.181.18 with SMTP id d18mr5417508ybf.270.1281965680068;
+ Mon, 16 Aug 2010 06:34:40 -0700 (PDT)
+Received: by 10.151.101.2 with HTTP; Mon, 16 Aug 2010 06:34:40 -0700 (PDT)
+X-Originating-IP: [193.91.161.15]
+Date: Mon, 16 Aug 2010 15:34:40 +0200
+Message-ID: <AANLkTim_Lvnz-Yvns6BCpW7cEYbqfV-0oqGwFFozVe0e@mail.gmail.com>
+Subject: En test
+From: Rune Myrland <rune@epubify.com>
+To: posterous@boox.epubify.com
+Content-Type: multipart/alternative; boundary=000e0cd6ad96f98da7048df0e434
+
+--000e0cd6ad96f98da7048df0e434
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+! Jeg skriver typedown
+
+Med br=F8dtekst
+
++ Bulletlist
++ Mer
++ Enda mer
+
+//* Et avsnitt som er uthevet. Skal vi kalle de en ingress?
+
+/* Og ett som er skr=E5stilt
+
+!! En undertittel
+
+--000e0cd6ad96f98da7048df0e434
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+! Jeg skriver typedown<br><br>Med br=F8dtekst<br><br>+ Bulletlist<br>+ Mer<=
+br>+ Enda mer<br><br>//* Et avsnitt som er uthevet. Skal vi kalle de en ing=
+ress?<br><br>/* Og ett som er skr=E5stilt<br><br>!! En undertittel<br>
+
+--000e0cd6ad96f98da7048df0e434--

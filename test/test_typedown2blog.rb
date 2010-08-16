@@ -5,15 +5,11 @@ include Typedown2Blog
 
 class TestTypedown2Blog < Test::Unit::TestCase
   context "Parser" do
-    should "parse mail_0001 without raising exceptions" do
+    should "parse test mails without raising exceptions" do
       assert_nothing_raised do
-        parse_mail "./test/data/mail_0001.eml"
-      end
-    end
-
-    should "parse mail_0002 without raising exceptions" do
-      assert_nothing_raised do
-        mail = parse_mail "./test/data/mail_0002.eml"
+        Dir.glob("./test/data/mail_*.eml") do |filename|
+          parse_mail "./test/data/mail_0001.eml"
+        end
       end
     end
   end
