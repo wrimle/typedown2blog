@@ -40,7 +40,7 @@ class TestTypedown2Blog < Test::Unit::TestCase
         Blog.setup do
           email "rune@epubify.com"
         end
-        Blog.post "rune@epubify.com", "./test/data/mail_0002.eml"
+        Blog.post "./test/data/mail_0002.eml"
       end
     end
 
