@@ -11,8 +11,8 @@ begin
     gem.homepage = "http://github.com/wrimle/typedown2blog"
     gem.authors = ["Rune Myrland"]
     gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
-    gem.add_dependency('attachments','>= 0.0.6')
-    gem.add_dependency('typedown','>= 0.0.2')
+    gem.add_dependency('attachments','>= 0.0.7')
+    gem.add_dependency('typedown','>= 0.0.3')
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
