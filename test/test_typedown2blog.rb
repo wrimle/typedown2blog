@@ -4,7 +4,7 @@ require 'typedown2blog'
 include Typedown2Blog
 
 class TestTypedown2Blog < Test::Unit::TestCase
-  context "Executes at all:" do
+  context "Parser" do
     should "parse mail_0001 without raising exceptions" do
       assert_nothing_raised do
         parse_mail "./test/data/mail_0001.eml"
@@ -18,7 +18,7 @@ class TestTypedown2Blog < Test::Unit::TestCase
     end
   end
 
-  context "" do
+  context "Attached image" do
     setup do
       @mail = parse_mail "./test/data/mail_0002.eml"
     end
@@ -26,9 +26,23 @@ class TestTypedown2Blog < Test::Unit::TestCase
     teardown do
     end
 
-    should "parse" do
+    should "be same as original image" do
+      original_image = File.read("./test/data/mail_0002.jpg")
+      attached_image = @mail.parts[1].body.decoded
+
+      assert(original_image == attached_image)
+    end
+  end
+
+  context "Wordpress" do
+    should "parse mail_0002 without raising exceptions" do
       assert_nothing_raised do
+        Blog.setup do
+          email = "rune@epubify.com"
+        end
+        blog "rune@epubify.com", "./test/data/mail_0002.eml"
       end
     end
+
   end
 end
