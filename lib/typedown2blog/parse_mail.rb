@@ -26,15 +26,15 @@ module Typedown2Blog
           data = file.read()
           file.close()
 
-          #add_file(:filename => f[:save_as], :content =>  data )
-          #attachments[f[:save_as]][:mime_type] = f[:mime_type]
+          add_file(:filename => f[:save_as], :content =>  data )
+          attachments[f[:save_as]][:mime_type] = f[:mime_type]
 
-          convert_to_multipart unless self.multipart?
-          add_multipart_mixed_header          
-          attachments[f[:save_as]] = {
-            :mime_type => f[:mime_type],
-            :content =>  data,
-          }
+          #convert_to_multipart unless self.multipart?
+          #add_multipart_mixed_header
+          #attachments[f[:save_as]] = {
+          #  :mime_type => f[:mime_type],
+          #  :content =>  data,
+          #}
         end
 
         if block_given?

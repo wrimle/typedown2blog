@@ -27,7 +27,10 @@ class TestTypedown2Blog < Test::Unit::TestCase
     end
 
     should "be same as original image" do
-      original_image = File.read("./test/data/mail_0002.jpg")
+      file = File.new("./test/data/mail_0002.jpg", "rb")
+      original_image = file.read()
+      file.close()
+
       attached_image = @mail.parts[1].body.decoded
 
       assert(original_image == attached_image)
@@ -40,7 +43,7 @@ class TestTypedown2Blog < Test::Unit::TestCase
         Blog.setup do
           email "rune@epubify.com"
         end
-        Blog.post "./test/data/mail_0002.eml"
+        #Blog.post "./test/data/mail_0002.eml"
       end
     end
 
