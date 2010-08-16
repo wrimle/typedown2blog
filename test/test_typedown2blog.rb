@@ -34,13 +34,13 @@ class TestTypedown2Blog < Test::Unit::TestCase
     end
   end
 
-  context "Wordpress" do
+  context "Blog" do
     should "parse mail_0002 without raising exceptions" do
       assert_nothing_raised do
         Blog.setup do
-          email = "rune@epubify.com"
+          email "rune@epubify.com"
         end
-        blog "rune@epubify.com", "./test/data/mail_0002.eml"
+        Blog.post "rune@epubify.com", "./test/data/mail_0002.eml"
       end
     end
 
