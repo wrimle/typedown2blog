@@ -4,13 +4,19 @@ require 'attachments'
 require 'typedown'
 
 module Typedown2Blog
+  def read_file filename
+    f = File.new(filename, "rb")
+    content = f.read()
+    f.close()
+    content
+  end
 
-  def parse_mail filename, &block
+  def convert_mail filename_or_hash, &block
     out = nil
     extract = Attachments::Extract.new [ "image/jpeg" ]
     begin
       out = Mail.new do
-        extract.parse filename
+        extract.parse filename_or_hash
         from extract.from
 
         typedown_root = Typedown::Section.sectionize(extract.text_body, extract.subject)
@@ -18,14 +24,11 @@ module Typedown2Blog
         subject typedown_root.title
         text_part do
           charset = 'UTF-8'
-          body typedown_root.body
+          body "ahc" #typedown_root.body
         end
 
         extract.files.each do |f|
-          file = File.new(f[:tmpfile], "rb")
-          data = file.read()
-          file.close()
-
+          data = read_file(f[:tmpfile])
           add_file(:filename => f[:save_as], :content =>  data )
           attachments[f[:save_as]][:mime_type] = f[:mime_type]
 
@@ -38,7 +41,7 @@ module Typedown2Blog
         end
 
         if block_given?
-          instance_eval &block
+          instance_exec typedown_root.body, &block
         end
       end
     ensure
@@ -48,27 +51,27 @@ module Typedown2Blog
   end
 
 
-  def send_to_blog filename, secret_mail
-    mail = Typedown2Blog::parse_mail filename do
-      to secret_mail
+  def create_mail typedown_file, media_files = [], &block
+    out = Mail.new do
+      typedown = read_file(typedown_file)
+      typedown_root = Typedown::Section.sectionize(typedown)
+      subject typedown_root.title
+      text_part do
+        charset = 'UTF-8'
+        body typedown_root.body
+      end
 
-      typedown = text_part.body.decoded
-      typedown_root = Typedown::Section.sectionize(typedown, subject)
-      text_part.body = "#{typedown_root.body.to_html}\n\n"
+      files.each do |f|
+        content = read_file(f)
+
+        add_file(:f, :content =>  content )
+        attachments[f[:save_as]][:mime_type] = f[:mime_type]
+      end
+
+      if block_given?
+        instance_eval &block
+      end
     end
-    mail.deliver!
-  end
-
-
-
-  def parse_glob glob_name, &block
-    didWork = false
-    Dir.glob(glob_name) do |filename|
-      block.call filename
-      didWork = true
-    end
-  
-    didWork
   end
 
 end

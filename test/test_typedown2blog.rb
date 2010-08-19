@@ -6,9 +6,9 @@ include Typedown2Blog
 class TestTypedown2Blog < Test::Unit::TestCase
   context "Parser" do
     should "parse test mails without raising exceptions" do
-      assert_nothing_raised do
-        Dir.glob("./test/data/mail_*.eml") do |filename|
-          parse_mail "./test/data/mail_0001.eml"
+      Dir.glob("./test/data/mail_*.eml") do |filename|
+        assert_nothing_raised do
+          convert_mail filename
         end
       end
     end
@@ -16,7 +16,7 @@ class TestTypedown2Blog < Test::Unit::TestCase
 
   context "Attached image" do
     setup do
-      @mail = parse_mail "./test/data/mail_0002.eml"
+      @mail = convert_mail "./test/data/mail_0002.eml"
     end
 
     teardown do
@@ -34,14 +34,42 @@ class TestTypedown2Blog < Test::Unit::TestCase
   end
 
   context "Blog" do
-    should "parse mail_0002 without raising exceptions" do
-      assert_nothing_raised do
-        Blog.setup do
-          email "rune@epubify.com"
+    setup do
+      Spec.setup do
+        blog do
+          mail_to "secret@someblog.com"
+          #format "wordpress"
+          #format "blogger"
         end
-        #Blog.post "./test/data/mail_0002.eml"
+        mail_defaults do 
+          delivery_method :test
+        end
       end
     end
 
+    should "post mails without raising exceptions" do
+      Spec.setup.blog do
+        format "wordpress"
+      end
+
+      Dir.glob("./test/data/*.eml") do |filename|
+        assert_nothing_raised do
+          Blog.post filename
+        end
+      end
+    end
+
+    should "post mails in blogger formatword without raising exceptions" do
+      Spec.setup.blog do
+        format "wordpress"
+      end
+
+      Dir.glob("./test/data/*.eml") do |filename|
+        assert_nothing_raised do
+          Blog.post filename
+        end
+      end
+    end
   end
+
 end
