@@ -17,20 +17,6 @@ module Typedown2Blog
     end
 
 
-    def self.email v = nil
-      if v
-        @mail_to = v
-      else
-        @mail_to
-      end
-    end
-
-
-    def self.email= v
-      @mail_to = v
-    end
-
-
     def self.mail_to v = nil
       if v
         @mail_to = v
