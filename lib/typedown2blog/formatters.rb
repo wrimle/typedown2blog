@@ -16,7 +16,7 @@ module Typedown2Blog
     def format_body typedown
       doc = Typedown::Section.sectionize(typedown)
       body = "#{doc.body.to_html}\n\n"
-      [ doc.title, body, "plain/text" ]
+      [ doc.title, body, "text/plain" ]
     end
 
     new "wordpress"
@@ -28,7 +28,7 @@ module Typedown2Blog
     def format_body typedown
       doc = Typedown::Section.sectionize(typedown)
       body = "<html>\n<body>\n#{doc.body.to_html}\n</body>\n</html>\n\n"
-      [ doc.title, body, "plain/text" ]
+      [ doc.title, body, "text/html" ]
     end
 
     new "blogger"
