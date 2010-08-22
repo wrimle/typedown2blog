@@ -62,8 +62,8 @@ module Typedown2Blog
           text_part do
             self.charset = "UTF-8"
             body mail_body
-            content_type mail_content_type
           end
+          text_body.content_type mail_content_type
         end
 
         mail_attachments.each do |a|
