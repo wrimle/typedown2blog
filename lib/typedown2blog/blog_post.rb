@@ -36,8 +36,9 @@ module Typedown2Blog
       @formatters
     end
 
-    def add_attachment v
-      @attachments << v
+    def add_attachment options = {}
+      options[:content] = File.read_binary(options[:tmpfile]) unless options[:content]
+      @attachments << options
     end
 
 
@@ -53,11 +54,23 @@ module Typedown2Blog
         to mail_to
         subject mail_subject
 
-        body mail_body
-        content_type mail_content_type
-        mail_attachments.each do |a|
-          add_file a
+        if mail_attachments.length == 0
+          body mail_body
+          content_type mail_content_type
+        else
+          text_part do
+            self.charset = "UTF-8"
+            body mail_body
+          end
         end
+
+        mail_attachments.each do |a|
+          add_file(:filename => a[:save_as], :content => a[:content])
+          attachments[a[:save_as]][:content_type] = a[:mime_type]
+        end
+
+        text_part.body = mail_body
+        text_part.content_type mail_content_type
       end
 
       log.info((mail_subject || "(No subject)") + " delivered to " + (mail_to || "(nobody)"))
@@ -75,7 +88,7 @@ module Typedown2Blog
         self.typedown_body = typedown_root.doc
 
         extract.files.each do |f|
-          self.add_attachment f[:tmpfile] # f[:save_as], f[:mime_type
+          self.add_attachment f
         end
       ensure
         extract.close
@@ -85,8 +98,6 @@ module Typedown2Blog
     protected
     def format_body typedown
       if(format)
-        puts self.class.formatters.inspect
-        puts format
         self.class.formatters[format].format_body typedown
       else
         doc = Typedown::Section.sectionize(typedown)

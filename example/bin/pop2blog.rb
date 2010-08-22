@@ -45,11 +45,11 @@ loop do
           when :mail_to_blogger then
             self.mail_to = record.params
             self.format = 'blogger'
-            self.import_mail :content => popped
+            self.import_mail :mail => mail
           when :mail_to_wordpress then
             self.mail_to = record.params
             self.format = 'wordpress'
-            self.import_mail :content => popped
+            self.import_mail :mail => mail
           else
             raise "Unsupported action: " + action.to_s
           end
@@ -60,12 +60,12 @@ loop do
       now = Time.now.strftime("%Y%m%d-%H%M%S")
       uuid = UUIDTools::UUID.random_create.to_s
       filename = "failed/#{now}-#{uuid}"
-      log.error filename + ", " + err.message + "\n" + err.backtrace
+      log.error filename + ", " + err.message
       f = File.new(filename, "wb")
       f.write(popped)
       f.close()
       f = File.new(filename + ".error", "wb")
-      f.write("#{e.message}\n#{e.backtrace}")
+      f.write("#{err.message}\n#{err.backtrace.join("\n")}")
       f.close()
     end
   end
