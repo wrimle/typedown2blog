@@ -46,8 +46,6 @@ module Typedown2Blog
       end
     end
 
-
-
     def self.glob v = nil
       if v
         @glob = v
