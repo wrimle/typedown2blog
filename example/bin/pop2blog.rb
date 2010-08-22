@@ -23,7 +23,6 @@ ActiveRecord::Base.establish_connection(config["db"])
 Spec::retriever.process do |popped|
   SecretMail::Controller.process Mail.new(popped) do |action, record, mail|
     blog_post = Typedown2Blog::BlogPost.new do 
-      puts action
       case action.to_sym
       when :created then
         self.mail_to = message.from
@@ -39,7 +38,6 @@ Spec::retriever.process do |popped|
         self.import_mail :content => popped
       end
     end
-    puts blog_post.inspect
     blog_post.post!
   end
 end

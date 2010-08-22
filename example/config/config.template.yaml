@@ -16,6 +16,11 @@ db:
 secret_mail:
   mail_domain: your_domain.example.com
 
+test:
+  secret_mail: your_test_account@server.example.com
+  mail_to: your_test_blog_or_personal_mail@some_blog.example.com
+  mail_from: you@example.com
+
 # Used only by blog.rb
 blog_post:
   mail_to: your@server.example.com
