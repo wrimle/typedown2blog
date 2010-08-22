@@ -10,31 +10,124 @@ emails once processed. If you don't want this behaviour you can easily create
 your own version of the script. You have to move the mail out of the
 watched directory though, or the mail will be reprocessed every 3 seconds.
 
+== NEW STUFF
+
+0.1.0
+
+* Major refactoring of the whole library.
+
 == USAGE
 
 To use the bin/blog or bin/typedown2blog_batcher create blog_config.rb
 in your ruby path, with content similar to:
 
+Example popping a catch-all mail account (requires secret_mail gem as an
+additional requirement).
 
-    Typedown2Blog::Spec::setup do
-      blog do
-        email 'blog@example.com'
-      end
+bin/pop2blog.rb
 
-      mail_defaults do 
-        delivery_method :smtp, {
-          :address              => 'your_mail_server',
-          :port                 => 25,
-          :domain               => 'example.com',
-          :user_name            => 'you@example.com',
-          :password             => 'your_password',
-          :authentication       => :plain,
-        }
-      end
 
-      # Only used by bin/typedown2blog_batcher
-      glob "your_home/Maildir/new/*"
-    end
+ require 'rubygems'
+ require 'mail'
+ require 'typedown2blog'
+ require 'secret_mail'
+
+
+ config = YAML::load(File.open("config/config.yaml"))
+
+
+ Typedown2Blog::Spec::setup do
+   retriever_method :pop3, config["pop3"]
+   delivery_method :smtp, config["smtp"]
+ end
+
+ SecretMail::MailAction.mail_domain config["secret_mail"]["mail_domain"]
+ ActiveRecord::Base.establish_connection(config["db"])
+
+
+ Spec::retriever.process do |popped|
+   SecretMail::Controller.process Mail.new(popped) do |action, record, mail|
+     blog_post = Typedown2Blog::BlogPost.new do 
+       case action.to_sym
+       when :created then
+         self.mail_to = message.from
+         self.mail_from = record.secret_mail
+         self.typedown_body = "! Your typedown2blog gateway\nrecord.secret_mail\n"
+       when :mail_to_blogger then
+         self.mail_to = record.params
+         self.format = 'blogger'
+         self.import_mail :content => popped
+       when :mail_to_wordpress then
+         self.mail_to = record.params
+         self.format = 'wordpress'
+         self.import_mail :content => popped
+       end
+     end
+     puts blog_post.inspect
+     blog_post.post!
+   end
+ end
+
+
+
+config/config.yaml
+
+ pop3:
+   address: pop.your_host.example.com
+   username: catch_all@your_domian.example.com
+   password: **secret**
+
+ smtp:
+   address: smtp.your_host.example.com
+   port: 25
+
+ db:
+   adapter: sqlite3
+   database: db/production.sqlite3
+
+ secret_mail:
+   mail_domain: your_domain.example.com
+
+
+ script/init_db.rb
+
+ require 'rubygems'
+ require 'secret_mail'
+ require 'secret_mail/../../db/create_tables'
+ require 'fileutils'
+
+ config = YAML::load(File.open("config/config.yaml"))
+
+ db_file = config["db"]["database"]
+ file_exist = false
+ if File.exists?(db_file)
+   puts "Db already exists"
+   file_exist = true
+   return
+ end
+
+ SecretMail::MailAction.mail_domain config["secret_mail"]["mail_domain"]
+ ActiveRecord::Base.establish_connection(config["db"])
+ ActiveRecord::Base.connection
+
+ CreateTables.up
+ domain = SecretMail::MailAction.mail_domain
+
+
+ SecretMail::MailAction.new({
+	:secret_mail => "blogger@#{domain}", 
+	:action => "create",
+	:params => "mail_to_blogger"
+ }).save
+
+
+ SecretMail::MailAction.new({
+	:secret_mail => "wordpress@#{domain}", 
+	:action => "create",
+	:params => "mail_to_wordpress"
+ }).save
+
+
 
 
 == Note on Patches/Pull Requests
