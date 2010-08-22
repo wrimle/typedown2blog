@@ -60,7 +60,7 @@ module Typedown2Blog
         end
       end
 
-      log.info(mail_subject + " delivered to " + mail_to)
+      log.info((mail_subject || "(No subject)") + " delivered to " + (mail_to || "(nobody)"))
       mail.deliver!
     end
 
@@ -85,7 +85,9 @@ module Typedown2Blog
     protected
     def format_body typedown
       if(format)
-        self.class.formatters[format].format typedown
+        puts self.class.formatters.inspect
+        puts format
+        self.class.formatters[format].format_body typedown
       else
         doc = Typedown::Section.sectionize(typedown)
         body = "#{doc.body.to_html}\n\n"
