@@ -1,14 +1,20 @@
 #!/bin/env ruby
 
 require 'rubygems'
+# from 'mail' gem
 require 'mail'
+# from 'secret_mail' gem
+require 'secret_mail'
+# from 'uuidtools' gem
+require 'uuidtools'
+# from 'log4r' gem
+require 'log4r'
+require 'log4r/outputter/syslogoutputter'
+
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '../..', 'lib'))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'typedown2blog'
-require 'secret_mail'
-require 'uuidtools'
-require 'log4r'
-require 'log4r/outputter/syslogoutputter'
 
 include Log4r
 
