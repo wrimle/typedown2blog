@@ -11,7 +11,8 @@ module Typedown2Blog
     end
   end
 
-  class Wordpress < BlogFormatter
+
+  class HtmlTagsInText < BlogFormatter
     def format_body typedown
       doc = Typedown::Section.sectionize(typedown)
       body = "#{doc.body.to_html}\n\n"
@@ -19,9 +20,11 @@ module Typedown2Blog
     end
 
     new "wordpress"
+    new "posterous"
   end
 
-  class Blogger < BlogFormatter
+
+  class HtmlDocument < BlogFormatter
     def format_body typedown
       doc = Typedown::Section.sectionize(typedown)
       body = "<html>\n<body>\n#{doc.body.to_html}\n</body>\n</html>\n\n"
