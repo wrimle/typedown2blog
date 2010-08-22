@@ -7,13 +7,19 @@ module Typedown2Blog
 
   class BlogPost < Base
     attr_accessor :mail_from, :mail_to, :typedown_body, :format
+    
+    begin
+      @formatters = {}
+    end
+
 
     def initialize options = {}, &block
       @mail_to = nil
       @mail_from = nil
       @typedown_body = ""
+      @format = nil
       @attachments = []
-      
+
       options.each do |k, v|
         send("#{k}=", v)
       end
@@ -21,6 +27,14 @@ module Typedown2Blog
       instance_eval &block if block_given?
     end
 
+    def self.add_formatter name, formatter
+      @formatters[ name ] = formatter
+    end
+
+
+    def self.formatters
+      @formatters
+    end
 
     def add_attachment v
       @attachments << v
@@ -70,9 +84,13 @@ module Typedown2Blog
 
     protected
     def format_body typedown
-      doc = Typedown::Section.sectionize(typedown)
-      body = "#{doc.body.to_html}\n\n"
-      [ doc.title, body, "plain/text" ]
+      if(format)
+        self.class.formatters[format].format typedown
+      else
+        doc = Typedown::Section.sectionize(typedown)
+        body = "#{doc.body.to_html}\n\n"
+        [ doc.title, body, "plain/text" ]
+      end
     end
 
   end
