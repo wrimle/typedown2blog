@@ -19,3 +19,7 @@ rdoc
 pkg
 
 ## PROJECT::SPECIFIC
+example/config/config.yaml
+*.gemspec
+*.pid
+*.sqlite3
