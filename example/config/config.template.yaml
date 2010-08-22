@@ -1,0 +1,22 @@
+# Used by both
+smtp:
+  address: smtp.your_provider.example.com
+  port: 25
+
+# Used only by pop2blog.rb
+pop3:
+  address: pop.your_provider.example.com
+  username: your_pop_user_name
+  password: **secret**
+
+db:
+  adapter: sqlite3
+  database: db/production.sqlite3
+
+secret_mail:
+  mail_domain: your_domain.example.com
+
+# Used only by blog.rb
+blog_post:
+  mail_to: your@server.example.com
+  mail_from: you@example.com
