@@ -16,7 +16,7 @@ Typedown2Blog::Spec::setup do
   delivery_method :smtp, config["smtp"]
 end
 
-post = BlogPost.new config("blog_post")
+post = BlogPost.new config["blog_post"]
 
 isFirst = true
 ARGV.each do |filename|
