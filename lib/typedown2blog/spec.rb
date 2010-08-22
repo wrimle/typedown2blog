@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+require 'mail_processor'
 
 module Typedown2Blog
   class Spec
@@ -14,29 +15,15 @@ module Typedown2Blog
     end
 
 
-    def self.mail_dir &block
-      @retreiver = MailDir.new &block if block_given?
-    end
-
-
-    def self.pop3 &block
-      if block_given?
-        @retreiver = Pop3.new &block 
-      else
-        @retreiver = Pop3.new
+    def self.retriever_method method, options={}, &block
+      @retriever = MailProcessor::Processor.new do
+        retriever method, options, &block
       end
+      @retriever
     end
 
-
-    def self.retreiver_method v, &block
-      if respond_to?(v)
-        send(v, &block)
-      end
-      @retreiver
-    end
-
-    def self.retreiver
-      @retreiver
+    def self.retriever
+      @retriever
     end
 
     def self.mail_defaults &block

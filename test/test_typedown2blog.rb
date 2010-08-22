@@ -37,7 +37,7 @@ class TestTypedown2Blog < Test::Unit::TestCase
     setup do
       Spec.setup do
         blog do
-          mail_to "secret@someblog.com"
+          mail_to "test@wrimle.com"
           #format "wordpress"
           #format "blogger"
         end

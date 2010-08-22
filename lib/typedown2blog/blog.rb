@@ -3,6 +3,7 @@
 include Typedown2Blog
 
 module Typedown2Blog
+
   class Blog
     begin
       @mail_to = nil
@@ -57,6 +58,11 @@ module Typedown2Blog
       @format = v
     end
 
+    def self.post filename_or_hash
+      mail = send("format_#{format}", filename_or_hash)
+      mail.deliver!
+      #puts mail.to_s
+    end
 
     def self.post filename_or_hash
       mail = send("format_#{format}", filename_or_hash)

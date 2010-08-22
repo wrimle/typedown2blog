@@ -15,12 +15,3 @@ class Object
   end
 end
 
-class File
-  def read_binary filename
-    f = File.new(filename, "rb")
-    content = f.read()
-    f.close()
-    content
-  end
-end
-

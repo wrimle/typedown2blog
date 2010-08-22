@@ -4,31 +4,21 @@ require 'attachments'
 require 'typedown'
 
 module Typedown2Blog
-  def read_file filename
-    f = File.new(filename, "rb")
-    content = f.read()
-    f.close()
-    content
-  end
-
   def convert_mail filename_or_hash, &block
     out = nil
     extract = Attachments::Extract.new [ "image/jpeg" ]
     begin
-      out = Mail.new do
+      #out = Mail.new do
+      post = BlogPost.new do
         extract.parse filename_or_hash
         from extract.from
 
         typedown_root = Typedown::Section.sectionize(extract.text_body, extract.subject)
-
-        subject typedown_root.title
-        text_part do
-          charset = 'UTF-8'
-          body "ahc" #typedown_root.body
-        end
+        post.typedown_body typedown_root.doc
 
         extract.files.each do |f|
-          data = read_file(f[:tmpfile])
+          add_attachment f[:tmpfile]
+          data = File.read_binary(f[:tmpfile])
           add_file(:filename => f[:save_as], :content =>  data )
           attachments[f[:save_as]][:mime_type] = f[:mime_type]
 
@@ -53,7 +43,7 @@ module Typedown2Blog
 
   def create_mail typedown_file, media_files = [], &block
     out = Mail.new do
-      typedown = read_file(typedown_file)
+      typedown = File.read_binary(typedown_file)
       typedown_root = Typedown::Section.sectionize(typedown)
       subject typedown_root.title
       text_part do

@@ -13,6 +13,7 @@ begin
     gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
     gem.add_dependency('attachments','>= 0.0.7')
     gem.add_dependency('typedown','>= 0.0.3')
+    gem.add_dependency('mail_processor','>= 0.0.1')
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
