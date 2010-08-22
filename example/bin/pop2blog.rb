@@ -13,7 +13,7 @@ require 'log4r/outputter/syslogoutputter'
 include Log4r
 
 log = Log4r::Logger.new("pop2blog")
-#outputter = Outputter.stdout
+outputter = Outputter.stdout
 #outputter = Log4r::FileOutputter.new "pop2blog", { :filename => "pop2blog.log" }
 #outputter = Log4r::SyslogOutputter.new "pop2blog"
 Log4r::Logger[ "pop2blog" ].outputters = outputter
@@ -60,9 +60,12 @@ loop do
       now = Time.now.strftime("%Y%m%d-%H%M%S")
       uuid = UUIDTools::UUID.random_create.to_s
       filename = "failed/#{now}-#{uuid}"
-      log.error filename + ", " + err.to_s
+      log.error filename + ", " + err.message + "\n" + err.backtrace
       f = File.new(filename, "wb")
       f.write(popped)
+      f.close()
+      f = File.new(filename + ".error", "wb")
+      f.write("#{e.message}\n#{e.backtrace}")
       f.close()
     end
   end

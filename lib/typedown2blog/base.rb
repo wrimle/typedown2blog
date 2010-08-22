@@ -12,7 +12,7 @@ module Typedown2Blog
 
   class Base
     def self.log
-      Log4r::Logger["Typedown2Blog::#{self.to_s}"] || Log4r::Logger.new("Typedown2Blog::#{self.to_s}")
+      Log4r::Logger["Typedown2Blog"]
     end
 
     def log
