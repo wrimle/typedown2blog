@@ -9,12 +9,6 @@ module Typedown2Blog
       self
     end
 
-
-    def self.blog &block
-      Blog.setup &block
-    end
-
-
     def self.retriever_method method, options={}, &block
       @retriever = MailProcessor::Processor.new do
         retriever method, options, &block
