@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 require 'attachments'
+require 'typedown'
 
 include Typedown2Blog
 module Typedown2Blog
@@ -61,6 +62,7 @@ module Typedown2Blog
           text_part do
             self.charset = "UTF-8"
             body mail_body
+            content_type mail_content_type
           end
         end
 
@@ -69,8 +71,8 @@ module Typedown2Blog
           attachments[a[:save_as]][:content_type] = a[:mime_type]
         end
 
-        text_part.body = mail_body
-        text_part.content_type mail_content_type
+        #text_part.body mail_body
+        #text_part.content_type mail_content_type
       end
 
       log.info((mail_subject || "(No subject)") + " delivered to " + (mail_to || "(nobody)"))
