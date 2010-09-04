@@ -37,43 +37,53 @@ SecretMail::MailAction.mail_domain config["secret_mail"]["mail_domain"]
 ActiveRecord::Base.establish_connection(config["db"])
 
 
+errorCount = 0
 loop do
-  didWork = Spec::retriever.process do |popped|
-    begin
-      SecretMail::Controller.process Mail.new(popped) do |action, record, mail|
-        blog_post = Typedown2Blog::BlogPost.new do 
-          case action.to_sym
-          when :created then
-            self.mail_to = mail.from[0]
-            self.mail_from = record.secret_mail
-            self.typedown_body = "! Your typedown2blog gateway\n#{record.secret_mail}\n"
-            self.format = 'blogger'
-          when :mail_to_blogger then
-            self.mail_to = record.params
-            self.format = 'blogger'
-            self.import_mail :mail => mail
-          when :mail_to_wordpress then
-            self.mail_to = record.params
-            self.format = 'wordpress'
-            self.import_mail :mail => mail
-          else
-            raise "Unsupported action: " + action.to_s
+  begin
+    didWork = Spec::retriever.process do |popped|
+      begin
+        SecretMail::Controller.process Mail.new(popped) do |action, record, mail|
+          blog_post = Typedown2Blog::BlogPost.new do 
+            case action.to_sym
+            when :created then
+              self.mail_to = mail.from[0]
+              self.mail_from = record.secret_mail
+              self.typedown_body = "! Your typedown2blog gateway\n#{record.secret_mail}\n"
+              self.format = 'blogger'
+            when :mail_to_blogger then
+              self.mail_to = record.params
+              self.format = 'blogger'
+              self.import_mail :mail => mail
+            when :mail_to_wordpress then
+              self.mail_to = record.params
+              self.format = 'wordpress'
+              self.import_mail :mail => mail
+            else
+              raise "Unsupported action: " + action.to_s
+            end
           end
+          blog_post.post!
         end
-        blog_post.post!
+      rescue => err
+        now = Time.now.strftime("%Y%m%d-%H%M%S")
+        uuid = UUIDTools::UUID.random_create.to_s
+        filename = "failed/#{now}-#{uuid}"
+        log.error filename + ", " + err.message
+        f = File.new(filename, "wb")
+        f.write(popped)
+        f.close()
+        f = File.new(filename + ".error", "wb")
+        f.write("#{err.message}\n#{err.backtrace.join("\n")}")
+        f.close()
       end
-    rescue => err
-      now = Time.now.strftime("%Y%m%d-%H%M%S")
-      uuid = UUIDTools::UUID.random_create.to_s
-      filename = "failed/#{now}-#{uuid}"
-      log.error filename + ", " + err.message
-      f = File.new(filename, "wb")
-      f.write(popped)
-      f.close()
-      f = File.new(filename + ".error", "wb")
-      f.write("#{err.message}\n#{err.backtrace.join("\n")}")
-      f.close()
     end
+    sleep(10) unless(didWork)
+    errorCount = 0
+  rescue => err
+    log.error "#{err.message}\n#{err.backtrace.join("\n")}"
+
+    errorCount += 1
+    seconds = [15 + errorCount * errorCount, 5 * 60].min
+    sleep(seconds)
   end
-  sleep(10) unless(didWork)
 end
